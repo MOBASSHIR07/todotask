@@ -3,6 +3,7 @@ import { FaPlus } from "react-icons/fa6";
 import { FaRegCalendarAlt, FaRegEdit, FaTrashAlt } from "react-icons/fa";
 import { format } from "date-fns";
 import { TodoContext } from '../Context/TodoProvider';
+import TaskDescription from './TaskDescription';
 
 
 
@@ -120,6 +121,10 @@ const AddTodo = () => {
           </div>
         </div>
       )}
+
+
+
+      
     {/* display task card */}
 <div className="grid gap-4 my-10">
   {todotask.length === 0 ? (
@@ -140,9 +145,10 @@ const AddTodo = () => {
             <h4 className="font-semibold text-lg text-gray-800">
               {task.title}
             </h4>
-            <p className="text-gray-600 text-sm mt-1 line-clamp-2">
+            {/* <p className="text-gray-600 text-sm mt-1 line-clamp-2">
               {task.description}
-            </p>
+            </p> */}
+            <TaskDescription description={task.description}></TaskDescription>
           </div>
         </div>
 
