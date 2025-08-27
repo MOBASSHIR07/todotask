@@ -1,6 +1,8 @@
 
 import './App.css'
 import AddTodo from './components/AddTodo'
+import Banner from './components/Banner'
+import Header from './components/Header'
 import TodoProvider from './Context/TodoProvider'
 
 function App() {
@@ -9,9 +11,11 @@ function App() {
   return (
     <>
     <TodoProvider>
-      <section>
-
+      <div className=''>
+      <section className='' >
+        <Header></Header>
       </section>
+      <Banner></Banner>
       <section>
 
       </section>
@@ -19,6 +23,7 @@ function App() {
       <section>
         <AddTodo></AddTodo>
       </section>
+      </div>
     </TodoProvider>
      
     </>
