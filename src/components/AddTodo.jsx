@@ -7,8 +7,11 @@ import { TodoContext } from '../Context/TodoProvider';
 
 
 const AddTodo = () => {
-  const { addTodo,todotask , deleteTodo} = useContext(TodoContext);
+  const { addTodo,todotask , deleteTodo , editTodo } = useContext(TodoContext);
   const [isOpen, setIsopen] = useState(false);
+  const[isupdating,setUpdating] = useState(false)
+  const [currentTask, setCurrentTask] = useState(null);
+
 
   const handleAddtodo = (e) => {
     e.preventDefault();
@@ -29,6 +32,25 @@ const AddTodo = () => {
     setIsopen(false);
   };
 
+  const handleUpdateTodo = (e) => {
+  e.preventDefault();
+  if (!currentTask) return; 
+ const date = e.target.date.value;
+  const formattedDate = format(new Date(date), "EEE, dd MMM yyyy");
+  const updatedData = {
+    id: currentTask.id, 
+    title: e.target.title.value,
+    description: e.target.description.value,
+    date:formattedDate
+    
+   
+  };
+  editTodo(updatedData.id, updatedData);
+  setUpdating(false);
+  setCurrentTask(null);
+};
+
+
   return (
     <div className='w-11/12 mx-auto my-4'>
       <div className='flex justify-between '>
@@ -38,25 +60,28 @@ const AddTodo = () => {
         </button>
       </div>
 
-      {isOpen && (
+      {(isOpen || isupdating) && (
         <div className='modal modal-open'>
           <div className='modal-box relative'>
             <h3 className="font-bold text-lg mb-4">Task Details</h3>
 
             <button
               className='btn btn-sm btn-circle absolute right-2 top-2'
-              onClick={() => setIsopen(false)}
+              onClick={() => {setIsopen(false);
+                              setUpdating(false);
+              }}
             >
               ✕
             </button>
 
-            <form onSubmit={handleAddtodo} className="space-y-3">
+            <form onSubmit={isupdating ? handleUpdateTodo : handleAddtodo} className="space-y-3">
               <label className="block font-medium">Title</label>
               <input
                 type="text"
                 name='title'
                 placeholder='Add a task title'
                 className="input input-bordered w-full"
+                defaultValue={isupdating && currentTask ? currentTask.title :''}
               />
               <label className="block font-medium">Date</label>
               <input
@@ -66,24 +91,29 @@ const AddTodo = () => {
                 onFocus={(e) => (e.target.type = "date")}
                 onBlur={(e) => !e.target.value && (e.target.type = "text")}
                 className="input input-bordered w-full"
+                defaultValue={isupdating && currentTask ? currentTask.date :''}
               />
               <label className="block font-medium">Any Description to your task</label>
               <textarea
                 name="description"
                 placeholder="Enter description"
                 className="textarea textarea-bordered w-full"
+                defaultValue={isupdating && currentTask ? currentTask.description :''}
               ></textarea>
 
               <div className='flex gap-3'>
                 <button
                   type="button"
-                  onClick={() => setIsopen(false)}
+                  onClick={() => {
+                    setIsopen(false);
+                    setUpdating(false);
+                  }}
                   className="btn bg-gray-300 "
                 >
                   Close
                 </button>
                 <button type="submit" className="btn btn-success ">
-                  Add Task
+                {isupdating ?'Update':'Add Task'} 
                 </button>
               </div>
             </form>
@@ -123,7 +153,9 @@ const AddTodo = () => {
             <span>{task.date}</span>
           </div>
 
-          <button className="hover:text-blue-500">
+          <button onClick={()=>{setUpdating(true);
+                                setCurrentTask(task);
+          }} className="hover:text-blue-500">
             <FaRegEdit size={18} />
           </button>
           <button onClick={()=>{deleteTodo(task.id)}} className="hover:text-red-500">

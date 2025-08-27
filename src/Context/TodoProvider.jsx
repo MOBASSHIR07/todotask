@@ -40,8 +40,22 @@ export const TodoProvider = ({ children }) => {
         setTodotask(updatedTasks);
     }
 
+    const editTodo = (id, updatedData) => {
+  const task = getTask();
+  const updatedTasks = task.map(t =>
+    t.id === id ? { ...t, ...updatedData } : t
+  );
+
+  // 3. Save the updated array back to localStorage
+  localStorage.setItem('task', JSON.stringify(updatedTasks));
+
+  // 4. Update React state so UI reflects changes
+  setTodotask(updatedTasks);
+};
+
+
     return (
-        <TodoContext.Provider value={{ addTodo, todotask, deleteTodo }}>
+        <TodoContext.Provider value={{ addTodo, todotask, deleteTodo,editTodo }}>
             {
                 children
             }
