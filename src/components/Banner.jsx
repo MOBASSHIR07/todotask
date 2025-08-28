@@ -5,7 +5,7 @@ import { RxCross2 } from "react-icons/rx";
 import { TodoContext } from '../Context/TodoProvider';
 
 const Banner = () => {
-    //  const{filterCategory} = useContext(TodoContext);
+     const{filterCategory} = useContext(TodoContext);
     return (
         <div className='w-11/12 mx-auto border shadow-xl rounded-md flex justify-between py-6 px-2 my-10 items-center'>
             
@@ -28,10 +28,10 @@ const Banner = () => {
                        <RxCross2 />
                     </button>
                 </div>
-{/* 
-               // onChange={(e)=>{filterCategory(e.target.value)}} defaultValue='all'  */}
+
+               
                 <div className='relative'>
-                    <select className="border rounded-md px-4 py-2 pr-10 appearance-none focus:outline-none focus:ring focus:border-blue-300">
+                    <select onChange={(e)=>{filterCategory(e.target.value)}} defaultValue='all'  className="border rounded-md px-4 py-2 pr-10 appearance-none focus:outline-none focus:ring focus:border-blue-300">
                         <option  value='all'>All</option>
                         <option value='completed'>Completed</option>
                         <option value='active'>Active</option>

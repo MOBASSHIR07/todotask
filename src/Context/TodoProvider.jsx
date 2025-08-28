@@ -6,7 +6,8 @@ export const TodoProvider = ({ children }) => {
     const [todotask, setTodotask] = useState([]);
     const [completed, setCompleted] = useState([]);
     const [active, setActive] = useState([]);
-    // const [filter, setFilter] = useState("all"); 
+    const [filter, setFilter] = useState("all"); 
+    const [taskToDisplay, SettaskToDisplay] = useState([]);
 
 
 
@@ -71,28 +72,38 @@ export const TodoProvider = ({ children }) => {
         // const updatedActive = updatedTasks.filter((t) => !t.completed);
         // setActive(updatedActive);
     };
+        
+      useEffect(()=>{
 
-    // const filterCategory = (type)=>{
-    //     if(type==="all")
-    //     {
-    //         setFilter(type)
-    //     }
-    //     if(type==='complted')
-    //     {
-    //         setFilter(type)
-    //     }
-    //     if(type==='active')
-    //     {
-    //         setFilter(type);
-    //     }
+       const getFilterTask = ()=>{
+            switch (filter) {
+            case 'completed':
+                return completed;
+            case 'active':
+                return active;
+            case 'all':
+            default:
+                return todotask;
+        }
+      
+        
 
-    //} 
-  //filterCategory
+       }
+       SettaskToDisplay(getFilterTask());
+
+      },[filter,todotask,active,completed])
+
+    const filterCategory = (type)=>{
+        setFilter(type);
+
+    } 
+
+  
 
 
 
     return (
-        <TodoContext.Provider value={{ addTodo, todotask, deleteTodo, editTodo, toggleComplete, completed, active,  }}>
+        <TodoContext.Provider value={{ addTodo, todotask, deleteTodo, editTodo, toggleComplete, completed, active,  filterCategory , taskToDisplay }}>
             {
                 children
             }

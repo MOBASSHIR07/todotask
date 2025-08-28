@@ -8,7 +8,7 @@ import TaskDescription from './TaskDescription';
 
 
 const AddTodo = () => {
-  const { addTodo, todotask, deleteTodo, editTodo, completed, toggleComplete } = useContext(TodoContext);
+  const { addTodo, todotask, deleteTodo, editTodo, completed, toggleComplete, taskToDisplay  } = useContext(TodoContext);
   const [isOpen, setIsopen] = useState(false);
   const [isupdating, setUpdating] = useState(false)
   const [currentTask, setCurrentTask] = useState(null);
@@ -129,10 +129,10 @@ const AddTodo = () => {
 
       {/* display task card */}
       <div className="grid gap-4 my-10">
-        {todotask.length === 0 ? (
+        {taskToDisplay.length === 0 ? (
           <p className="text-gray-500">No tasks yet. Add one!</p>
         ) : (
-          todotask.map((task) => (
+          taskToDisplay.map((task) => (
             <div
               key={task.id}
               className="flex items-center justify-between bg-white shadow-md rounded-xl p-5"
