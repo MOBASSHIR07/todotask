@@ -10,6 +10,7 @@ export const TodoProvider = ({ children }) => {
     const [taskToDisplay, SettaskToDisplay] = useState([]);
     const[searchItem , setSearchItem] = useState("");
     const[searchResult , setSearchResult] = useState([]);
+    const[loading , setLoading] = useState(true)
 
 
 
@@ -19,6 +20,7 @@ export const TodoProvider = ({ children }) => {
         if (task) {
             setTodotask(JSON.parse(task));
         }
+         setLoading(false);
     }, []);
 
     const getTask = () => {
@@ -139,7 +141,7 @@ export const TodoProvider = ({ children }) => {
 
     return (
         <TodoContext.Provider value={{ addTodo, todotask, deleteTodo, editTodo, toggleComplete, completed, active,  filterCategory ,
-         taskToDisplay, handleSearchTask, searchItem , setSearchItem}}>
+         taskToDisplay, handleSearchTask, searchItem , setSearchItem ,loading}}>
             {
                 children
             }

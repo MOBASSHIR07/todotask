@@ -1,17 +1,58 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { FaPlus } from "react-icons/fa6";
 import { FaRegCalendarAlt, FaRegEdit, FaTrashAlt } from "react-icons/fa";
 import { format } from "date-fns";
 import { TodoContext } from '../Context/TodoProvider';
 import TaskDescription from './TaskDescription';
+import Loader from './Loader';
 
 
 
 const AddTodo = () => {
-  const { addTodo, todotask, deleteTodo, editTodo, completed, toggleComplete, taskToDisplay  } = useContext(TodoContext);
+  const { addTodo, todotask, deleteTodo, editTodo, completed, toggleComplete, taskToDisplay, loading } = useContext(TodoContext);
   const [isOpen, setIsopen] = useState(false);
   const [isupdating, setUpdating] = useState(false)
   const [currentTask, setCurrentTask] = useState(null);
+
+  // const detectKyeDown = (e)=>{
+  //   console.log("pressed", e.key);
+  //   if(e.key==="Enter" && isOpen){
+
+  //       handleAddtodo()
+  //   }
+  //   if(e.key==="Enter" && isupdating){
+  //       handleUpdateTodo()
+  //   }
+  //   if(e.key==="Escape"){
+  //     setIsopen(false);
+  //     setUpdating(false);
+  //   }
+
+  // }
+  // useEffect(()=>{
+
+  //   document.addEventListener('keydown', detectKyeDown, true)
+
+  // },[isOpen,isupdating])
+
+
+  useEffect(() => {
+    const detectKeyDown = (e) => {
+      if (e.key === "Escape" && (isOpen || isupdating)) {
+        setIsopen(false);
+        setUpdating(false);
+      } else if (e.key === "Enter" && (isOpen || isupdating)) {
+        e.preventDefault(); 
+        const form = document.getElementById("todoForm");
+        if (form) form.requestSubmit(); 
+      }
+    };
+
+    document.addEventListener("keydown", detectKeyDown);
+    return () => document.removeEventListener("keydown", detectKeyDown);
+  }, [isOpen, isupdating]);
+
+
 
 
 
@@ -52,6 +93,10 @@ const AddTodo = () => {
     setCurrentTask(null);
   };
 
+  if (loading) {
+    return <Loader></Loader>
+  }
+
 
   return (
     <div className='w-11/12 mx-auto my-4'>
@@ -77,7 +122,7 @@ const AddTodo = () => {
               ✕
             </button>
 
-            <form onSubmit={isupdating ? handleUpdateTodo : handleAddtodo} className="space-y-3">
+            <form id="todoForm" onSubmit={isupdating ? handleUpdateTodo : handleAddtodo} className="space-y-3">
               <label className="block font-medium">Title</label>
               <input
                 type="text"
@@ -144,7 +189,7 @@ const AddTodo = () => {
                   onChange={() => toggleComplete(task.id)}
                   disabled={task.completed}
                   type="checkbox"
-                  className="w-5 h-5 mt-1 accent-green-500 cursor-pointer"
+                  className={`w-5 h-5 mt-1 ${task.className ? "text-green-500 cursor-not-allowed" : " accent-green-500 cursor-pointer"}`}
                 />
                 <div>
                   <h4 className="font-semibold text-lg text-gray-800">
@@ -167,10 +212,10 @@ const AddTodo = () => {
                 <button onClick={() => {
                   setUpdating(true);
                   setCurrentTask(task);
-                }} disabled={task.completed} 
+                }} disabled={task.completed}
                   className={`p-2 rounded-md 
                          ${task.completed
-                      ? "text-gray-400 cursor-not-allowed"   
+                      ? "text-gray-400 cursor-not-allowed"
                       : "text-blue-500 hover:text-blue-700"
                     }`} >
                   <FaRegEdit size={18} />
