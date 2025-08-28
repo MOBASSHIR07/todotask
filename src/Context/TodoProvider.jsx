@@ -4,6 +4,11 @@ export const TodoContext = createContext();
 export const TodoProvider = ({ children }) => {
 
     const [todotask, setTodotask] = useState([]);
+    const [completed, setCompleted] = useState([]);
+    const [active, setActive] = useState([]);
+    // const [filter, setFilter] = useState("all"); 
+
+
 
     useEffect(() => {
         const task = localStorage.getItem('task');
@@ -33,25 +38,61 @@ export const TodoProvider = ({ children }) => {
 
     }
 
-    const deleteTodo = (id)=>{
+    const deleteTodo = (id) => {
         const task = getTask();
-        const updatedTasks = task.filter(t=>t.id !=id)
-        localStorage.setItem('task',JSON.stringify(updatedTasks));
+        const updatedTasks = task.filter(t => t.id != id)
+        localStorage.setItem('task', JSON.stringify(updatedTasks));
         setTodotask(updatedTasks);
     }
 
     const editTodo = (id, updatedData) => {
-  const task = getTask();
-  const updatedTasks = task.map(t =>
-    t.id === id ? { ...t, ...updatedData } : t
-  );
-  localStorage.setItem('task', JSON.stringify(updatedTasks));
-  setTodotask(updatedTasks);
-};
+        const task = getTask();
+        const updatedTasks = task.map(t =>
+            t.id === id ? { ...t, ...updatedData } : t
+        );
+        localStorage.setItem('task', JSON.stringify(updatedTasks));
+        setTodotask(updatedTasks);
+    };
+
+    useEffect(() => {
+        setCompleted(todotask.filter(t => t.completed));
+        setActive(todotask.filter(t => !t.completed));
+    }, [todotask]);
+
+    const toggleComplete = (id) => {
+        const updatedTasks = todotask.map((t) =>
+            t.id === id ? { ...t, completed: !t.completed } : t
+        );
+
+        setTodotask(updatedTasks);
+        localStorage.setItem("task", JSON.stringify(updatedTasks));
+        // const updatedCompleted = updatedTasks.filter((t) => t.completed);
+        // setCompleted(updatedCompleted);
+        // const updatedActive = updatedTasks.filter((t) => !t.completed);
+        // setActive(updatedActive);
+    };
+
+    // const filterCategory = (type)=>{
+    //     if(type==="all")
+    //     {
+    //         setFilter(type)
+    //     }
+    //     if(type==='complted')
+    //     {
+    //         setFilter(type)
+    //     }
+    //     if(type==='active')
+    //     {
+    //         setFilter(type);
+    //     }
+
+    //} 
+  //filterCategory
+
 
 
     return (
-        <TodoContext.Provider value={{ addTodo, todotask, deleteTodo,editTodo }}>
+        <TodoContext.Provider value={{ addTodo, todotask, deleteTodo, editTodo, toggleComplete, completed, active,  }}>
             {
                 children
             }
