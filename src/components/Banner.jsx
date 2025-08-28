@@ -5,7 +5,7 @@ import { RxCross2 } from "react-icons/rx";
 import { TodoContext } from '../Context/TodoProvider';
 
 const Banner = () => {
-     const{filterCategory} = useContext(TodoContext);
+     const{filterCategory, handleSearchTask,searchItem, setSearchItem} = useContext(TodoContext);
     return (
         <div className='w-11/12 mx-auto border shadow-xl rounded-md flex justify-between py-6 px-2 my-10 items-center'>
             
@@ -19,12 +19,15 @@ const Banner = () => {
             
                 <div className="relative flex items-center w-full">
                     <input
+                    
+                         value={searchItem}
+                        onChange={(e)=>{handleSearchTask(e.target.value)}}
                         type="text"
                         placeholder="Search tasks..."
                         className="w-full pl-10 pr-4 py-2 border rounded-md focus:outline-none focus:ring focus:border-blue-300"
                     />
                     <FaSearch className="absolute left-3 text-gray-400" />
-                    <button className="absolute right-3 text-gray-400 focus:outline-none">
+                    <button onClick={()=>{setSearchItem("");handleSearchTask("");}} className="absolute right-3 text-gray-400 focus:outline-none">
                        <RxCross2 />
                     </button>
                 </div>

@@ -8,6 +8,9 @@ export const TodoProvider = ({ children }) => {
     const [active, setActive] = useState([]);
     const [filter, setFilter] = useState("all"); 
     const [taskToDisplay, SettaskToDisplay] = useState([]);
+    const[searchItem , setSearchItem] = useState("");
+    const[searchResult , setSearchResult] = useState([]);
+
 
 
 
@@ -98,12 +101,45 @@ export const TodoProvider = ({ children }) => {
 
     } 
 
+
+    const handleSearchTask = (title)=>{
+     setSearchItem(title)
+
+     
+     if(filter==="completed"){
+        const result = completed.filter(task=>
+        task.title.toLowerCase().includes(title.toLowerCase())
+     )
+     SettaskToDisplay(result);
+     }
+     else if(filter==="active"){
+         const result = active.filter(task=>
+        task.title.toLowerCase().includes(title.toLowerCase())
+         )
+          SettaskToDisplay(result);
+     }
+     else {
+        const tasks = getTask();
+         const result = tasks.filter(task=>
+        task.title.toLowerCase().includes(title.toLowerCase())
+         )
+       SettaskToDisplay(result);
+     }
+     
+    //  setSearchResult(result)
+     
+
+    // SettaskToDisplay(searchResult)
+
+    }
+
   
 
 
 
     return (
-        <TodoContext.Provider value={{ addTodo, todotask, deleteTodo, editTodo, toggleComplete, completed, active,  filterCategory , taskToDisplay }}>
+        <TodoContext.Provider value={{ addTodo, todotask, deleteTodo, editTodo, toggleComplete, completed, active,  filterCategory ,
+         taskToDisplay, handleSearchTask, searchItem , setSearchItem}}>
             {
                 children
             }
