@@ -42,9 +42,9 @@ const AddTodo = () => {
         setIsopen(false);
         setUpdating(false);
       } else if (e.key === "Enter" && (isOpen || isupdating)) {
-        e.preventDefault(); 
+        e.preventDefault();
         const form = document.getElementById("todoForm");
-        if (form) form.requestSubmit(); 
+        if (form) form.requestSubmit();
       }
     };
 
@@ -99,13 +99,18 @@ const AddTodo = () => {
 
 
   return (
-    <div className='w-11/12 mx-auto my-4'>
-      <div className='flex justify-between '>
-        <h3 className='text-3xl'>Tasks</h3>
-        <button className='btn btn-success text-white' onClick={() => setIsopen(true)}>
-          <FaPlus /> <span className=''>Add Task</span>
+    <div className='  md:w-11/12 mx-auto my-4'>
+      <div className="flex flex-col sm:flex-row justify-between items-center gap-3">
+        <h3 className="text-3xl text-center sm:text-left">Tasks</h3>
+
+        <button
+          className="btn btn-success text-white w-3/4 sm:w-auto"
+          onClick={() => setIsopen(true)}
+        >
+          <FaPlus /> <span>Add Task</span>
         </button>
       </div>
+
 
       {(isOpen || isupdating) && (
         <div className='modal modal-open'>
@@ -183,7 +188,8 @@ const AddTodo = () => {
               className="flex items-center justify-between bg-white shadow-md rounded-xl p-5"
             >
 
-              <div className="flex items-start gap-3 w-2/3">
+              {/* <div className="flex items-start gap-3 w-2/3 "> */}
+              <div className="flex items-start gap-3 w-full md:w-2/3">
                 <input
                   checked={task.completed}
                   onChange={() => toggleComplete(task.id)}
@@ -191,19 +197,19 @@ const AddTodo = () => {
                   type="checkbox"
                   className={`w-5 h-5 mt-1 ${task.className ? "text-green-500 cursor-not-allowed" : " accent-green-500 cursor-pointer"}`}
                 />
-                <div>
+                <div className=''>
                   <h4 className="font-semibold text-lg text-gray-800">
                     {task.title}
                   </h4>
                   {/* <p className="text-gray-600 text-sm mt-1 line-clamp-2">
               {task.description}
             </p> */}
-                  <TaskDescription description={task.description}></TaskDescription>
+                  <TaskDescription   description={task.description}></TaskDescription>
                 </div>
               </div>
 
 
-              <div className="flex items-center justify-end gap-5 w-1/3 text-gray-600">
+               <div className="flex flex-wrap md:flex-nowrap items-center gap-3 w-full md:w-1/3 mt-3 md:mt-0 justify-between md:justify-end text-gray-600">
                 <div className="flex items-center gap-2 text-sm">
                   <FaRegCalendarAlt className="text-gray-500" />
                   <span>{task.date}</span>
