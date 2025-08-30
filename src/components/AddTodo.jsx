@@ -5,7 +5,7 @@ import { format } from "date-fns";
 import { TodoContext } from '../Context/TodoProvider';
 import TaskDescription from './TaskDescription';
 import Loader from './Loader';
-
+import { motion, AnimatePresence } from "framer-motion";
 
 
 const AddTodo = () => {
@@ -137,15 +137,20 @@ const AddTodo = () => {
                 defaultValue={isupdating && currentTask ? currentTask.title : ''}
               />
               <label className="block font-medium">Date</label>
-              <input
-                type="text"
-                name="date"
-                placeholder="Select date"
-                onFocus={(e) => (e.target.type = "date")}
-                onBlur={(e) => !e.target.value && (e.target.type = "text")}
-                className="input input-bordered w-full"
-                defaultValue={isupdating && currentTask ? currentTask.date : ''}
-              />
+              <div className="relative">
+                <input
+                  type="text"
+                  name="date"
+                  placeholder="Select date"
+                  onFocus={(e) => (e.target.type = "date")}
+                  onBlur={(e) => !e.target.value && (e.target.type = "text")}
+                  className="peer input input-bordered w-full pr-10"
+                  defaultValue={isupdating && currentTask ? currentTask.date : ''}
+                />
+                <FaRegCalendarAlt
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 transition-opacity duration-200 peer-focus:opacity-0 peer-[&:not(:placeholder-shown)]:opacity-0"
+                />
+              </div>
               <label className="block font-medium">Any Description to your task</label>
               <textarea
                 name="description"
@@ -182,56 +187,63 @@ const AddTodo = () => {
         {taskToDisplay.length === 0 ? (
           <p className="text-gray-500">No tasks yet. Add one!</p>
         ) : (
-          taskToDisplay.map((task) => (
-            <div
-              key={task.id}
-              className="flex items-center justify-between bg-white shadow-md rounded-xl p-5"
-            >
+          <AnimatePresence>
+            {taskToDisplay.map((task) => (
+              <motion.div
+                key={task.id}
+                initial={{ opacity: 0, x: -50 }}   
+                animate={{ opacity: 1, x: 0 }}     
+                exit={{ opacity: 0, x: -200 }}     
+                transition={{ duration: 0.4 }}     
+              
+                className="flex items-center justify-between bg-white shadow-md rounded-xl p-5"
+              >
 
-              {/* <div className="flex items-start gap-3 w-2/3 "> */}
-              <div className="flex items-start gap-3 w-full md:w-2/3">
-                <input
-                  checked={task.completed}
-                  onChange={() => toggleComplete(task.id)}
-                  disabled={task.completed}
-                  type="checkbox"
-                  className={`w-5 h-5 mt-1 ${task.className ? "text-green-500 cursor-not-allowed" : " accent-green-500 cursor-pointer"}`}
-                />
-                <div className=''>
-                  <h4 className="font-semibold text-lg text-gray-800">
-                    {task.title}
-                  </h4>
-                  {/* <p className="text-gray-600 text-sm mt-1 line-clamp-2">
+                {/* <div className="flex items-start gap-3 w-2/3 "> */}
+                <div className="flex items-start gap-3 w-full md:w-2/3">
+                  <input
+                    checked={task.completed}
+                    onChange={() => toggleComplete(task.id)}
+                    disabled={task.completed}
+                    type="checkbox"
+                    className={`w-6 h-6 sm:w-5 sm:h-5 mt-1 flex-shrink-0 ${task.completed ? "text-green-500 cursor-not-allowed" : "accent-green-500 cursor-pointer"}`}
+                  />
+                  <div className=''>
+                    <h4 className="font-semibold text-lg text-gray-800">
+                      {task.title}
+                    </h4>
+                    {/* <p className="text-gray-600 text-sm mt-1 line-clamp-2">
               {task.description}
             </p> */}
-                  <TaskDescription   description={task.description}></TaskDescription>
-                </div>
-              </div>
-
-
-               <div className="flex flex-wrap md:flex-nowrap items-center gap-3 w-full md:w-1/3 mt-3 md:mt-0 justify-between md:justify-end text-gray-600">
-                <div className="flex items-center gap-2 text-sm">
-                  <FaRegCalendarAlt className="text-gray-500" />
-                  <span>{task.date}</span>
+                    <TaskDescription description={task.description}></TaskDescription>
+                  </div>
                 </div>
 
-                <button onClick={() => {
-                  setUpdating(true);
-                  setCurrentTask(task);
-                }} disabled={task.completed}
-                  className={`p-2 rounded-md 
+
+                <div className="flex flex-wrap md:flex-nowrap items-center gap-3 w-full md:w-1/3 mt-3 md:mt-0 justify-between md:justify-end text-gray-600">
+                  <div className="flex items-center gap-2 text-sm">
+                    <FaRegCalendarAlt className="text-gray-500" />
+                    <span>{task.date}</span>
+                  </div>
+
+                  <button onClick={() => {
+                    setUpdating(true);
+                    setCurrentTask(task);
+                  }} disabled={task.completed}
+                    className={`p-2 rounded-md 
                          ${task.completed
-                      ? "text-gray-400 cursor-not-allowed"
-                      : "text-blue-500 hover:text-blue-700"
-                    }`} >
-                  <FaRegEdit size={18} />
-                </button>
-                <button onClick={() => { deleteTodo(task.id) }} className="hover:text-red-500">
-                  <FaTrashAlt size={18} />
-                </button>
-              </div>
-            </div>
-          ))
+                        ? "text-gray-400 cursor-not-allowed"
+                        : "text-blue-500 hover:text-blue-700"
+                      }`} >
+                    <FaRegEdit size={18} />
+                  </button>
+                  <button onClick={() => { deleteTodo(task.id) }} className="hover:text-red-500">
+                    <FaTrashAlt size={18} />
+                  </button>
+                </div>
+              </motion.div>
+            ))}
+          </AnimatePresence>
         )}
       </div>
     </div>
